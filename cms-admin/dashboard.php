@@ -1,4 +1,4 @@
-<?php
+<?
 
 /**
 * @package CandyCMS
@@ -23,37 +23,39 @@ require('bootstrap.php');
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<?php $array = adminNav();?>
-	<title><?php echo (isset($_GET['page'])) ? ucfirst($_GET['page']) : 'Dashboard' ?> &raquo; Admin &raquo; <?php echo Candy::Options('site_title'); ?></title>
-	<link rel="stylesheet" href="css/admin.css" type="text/css" />
-		<link rel="stylesheet" href="../core/plugins/redactor/css/redactor.css" type="text/css" />
-	<link type="text/css" rel="stylesheet" href="css/jquery.miniColors.css" />
+	<? $array = adminNav();?>
+	<title><? echo (isset($_GET['page'])) ? ucfirst($_GET['page']) : 'Dashboard' ?> &raquo; Admin &raquo; <? echo Candy::Options('site_title'); ?></title>
+    <? candyCss('admin.css'); ?>
+    <? candyCss('redactor.css'); ?>
+    <? candyCss('jquery.miniColors.css'); ?>
+
 	<script type="text/javascript">
-		var adminpath = '<?php echo URL_PATH.'cms-admin/' ?>';
+		var adminpath = '<?= URL_PATH.'cms-admin/' ?>';
 	</script>
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="js/jquery.miniColors.min.js"></script>
-	<script type="text/javascript" src="js/jquery.nestable.js"></script>
-	<script type="text/javascript" src="../core/plugins/redactor/redactor.min.js"></script>
-	<script type="text/javascript" src="js/jquery.scripts.min.js"></script>
+
+    <? candyScript('//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js', true) ?>
+	<? candyScript('jquery.miniColors.min.js') ?>
+    <? candyScript('jquery.nestable.js') ?>
+    <? candyScript('redactor/redactor.min.js') ?>
+    <? candyScript('redactor/fullscreen.js') ?>
+    <? candyScript('jquery.scripts.min.js') ?>
 	<!--[if lt IE 9]>
-	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <? candyScript('http://html5shim.googlecode.com/svn/trunk/html5.js', true) ?>
 	<![endif]-->
-	<?php adminHead() ?>
+	<? adminHead() ?>
 </head>
 <body>
-	<header>	
+	<header class="app">
 		<div id="head-cont">
 			<a href="dashboard.php" id="head-logo"> </a>
-			<a href="<?php echo URL_PATH ?>" class="view-site">View Site &rarr;</a>
-			<button class="user-btn"><?php echo $_SESSION['username'] ?></button>
+			<a href="<? echo URL_PATH ?>" class="view-site">View Site &rarr;</a>
+			<button class="user-btn"><? echo $_SESSION['username'] ?></button>
 			<ul id="usernav">
 				<li><a href="dashboard.php?page=profile">Account Settings</a></li>
 				<li><a href="logout.php" title="Logout">Logout</a></li>
 			</ul>
 			<ul class="nav">
-				<?php 
+				<?
 				
 					$array = adminNav($_SESSION['role']);
 					if (isset($_GET['page'])) {
@@ -66,9 +68,8 @@ require('bootstrap.php');
 			</ul>
  		</div>
 	</header>
-	
-		
-		<?php 
+
+		<?
 		
 			if (!isset($_GET['page']) || $_GET['page'] != 'update') {
 				echo Update::checkUpdate();
@@ -76,9 +77,9 @@ require('bootstrap.php');
 			
 		?>
 		
-		<?php if( isset($_GET['page']) ) : ?>
+		<? if( isset($_GET['page']) ) : ?>
 		
-			<?php 
+			<?
 				
 				if (file_exists('pages/'.$_GET['page'].'.php')) {
 					include 'pages/'.$_GET['page'].'.php';	
@@ -88,31 +89,23 @@ require('bootstrap.php');
 				
 			?>
 		
-		<?php else :?>
+		<? else :?>
 			
 			<div id="title-bar">
-				
 				<div id="title-bar-cont">
-				
 					<h1>Dashboard</h1>
-				
 				</div>
-			
 			</div>
 			
 			<div id="container">
-			
-			
-			<?php Plugins::getWidgets() ?>
-			
-			
+    			<? Plugins::getWidgets() ?>
 			</div>
 			
-		<?php endif; ?>
+		<? endif; ?>
 	
-	<footer>
-		<p>Copyright &copy;<?php echo date('Y') ?> Cocoon Design - Built with <a href="http://www.candycms.org" title="Candy CMS">Candy</a> v<?php echo CANDYVERSION ?> - <a href="<?php echo URL_PATH ?>" title="View Site">View Site</a></p>
-		<a href="http://www.wearecocoon.co.uk" title="Made By Cocoon" target="_blank" class="footer-logo"> </a>
+	<footer class="app">
+        <p>Copyright &copy;<? echo date('Y') ?> Adam Patterson - Built with <a href="http://www.candycms.org" title="Candy CMS">Candy</a> v<? echo CANDYVERSION ?> - <a href="<? echo URL_PATH ?>" title="View Site">View Site</a></p>
+        <a href="http://www.adampatterson.ca" title="Made By Adam Patterson" target="_blank" class="footer-logo"> </a>
 	</footer>
 </body>
 </html>

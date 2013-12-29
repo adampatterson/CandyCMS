@@ -1,6 +1,22 @@
 $(function() {
 	
-	$('.ckeditor').redactor({ focus: false, convertDivs: false, removeClasses: false, imageUpload: 'uploader.php', autoresize: false });
+	$('.ckeditor').redactor({
+        tabSpaces: 4,
+        focus: true,
+        convertDivs: false,
+        removeClasses: false,
+        imageUpload: 'uploader.php',
+//        imageUploadErrorCallback: function(json)
+//        {
+//            alert(json.error);
+//            alert(json.anothermessage);
+//        },
+        //clipboardUploadUrl: '/your_clipboard_upload_script/',
+        autoresize: true,
+        toolbarFixed: true,
+        convertVideoLinks: true,
+        plugins: ['fullscreen']
+    });
 	
 	$(".colorpicker").miniColors({
 		letterCase: 'uppercase',
@@ -47,10 +63,8 @@ $(function() {
 	}
 	
 	function closeModal() {
-	
 		$('#modal').remove();
 		$('#overlay').remove();
-	
 	}
 	
 	$('#cfbtn').click(function() {
@@ -97,7 +111,7 @@ $(function() {
 		  $('#cf-area').append("<li><h3>" + title + "</h3><p>" + desc + "</p>" + data + "<input type='hidden' name='cfield[" + name + "]' value='" + key + "' /><input type='hidden' name='cf-title["+name+"]' value='" + title + "' /><input type='hidden' name='cf-desc["+name+"]' value='" + desc + "' /></li>");
 		  closeModal();
 		  
-		  $('.ckeditor').redactor({ focus: false, convertDivs: false, removeClasses: false, imageUpload: 'uploader.php', autoresize: false  });
+		  $('.ckeditor').redactor({ focus: true, convertDivs: false, removeClasses: false, imageUpload: 'uploader.php', autoresize: false  });
 		  
 		});
 	
@@ -126,20 +140,90 @@ $(function() {
 						
 						$('#cf-area').append(field);
 						
-						$('.ckeditor').redactor({ focus: false, convertDivs: false, removeClasses: false, imageUpload: 'uploader.php', autoresize: false  });		
+						$('.ckeditor').redactor({ focus: true, convertDivs: false, removeClasses: false, imageUpload: 'uploader.php', autoresize: false  });
 						
 					
 					});
-					
+
 				}
-				
-				
-					
+
 			}
 			
 		}, 'json');
 		
-	});	
-	
+	});
+
+
+    function username_check() {
+        var username = $('#username').val();
+        if(username == "" || username.length < 4)
+        {
+            $('.tick').hide();
+        }
+        else
+        {
+            jQuery.ajax({
+                type: "POST",
+                url: adminpath + "ajax/uniqueuser.php",
+                data: 'username='+ username,
+                cache: false,
+                success: function(response){
+					
+                    console.info(response);
+					
+                    if(response == '1')
+                    {
+                        $('#username').css('border', '1px #C33 solid');
+                        // $('.user_tick').hide();
+						  // $('.user_cross').fadeIn();
+                        $("#save").attr("disabled", "disabled");
+                    }
+                    else
+                    {
+                        $('#username').css('border', '1px #090 solid');
+                        // $('.user_cross').hide();
+         			   	  // $('.user_tick').fadeIn();
+                        $("#save").removeAttr("disabled");
+                    }
+                }
+            });
+        }
+    }
+
+    function useremail_check() {
+        var username = $('#useremail').val();
+        if(username == "" || username.length < 4)
+        {
+            $('.email_tick').hide();
+        }
+        else
+        {
+            jQuery.ajax({
+                type: "POST",
+                url: adminpath + "ajax/uniqueuser.php",
+                data: 'username='+ username,
+                cache: false,
+                success: function(response){
+                    if(response == '1')
+                    {
+                        $('#useremail').css('border', '1px #C33 solid');
+                        // $('.email_tick').hide();
+//                         $('.email_cross').fadeIn();
+                        $("#save").attr("disabled", "disabled");
+                    }
+                    else
+                    {
+                        $('#useremail').css('border', '1px #090 solid');
+                        // $('.email_cross').hide();
+//                         $('.email_tick').fadeIn();
+                        $("#save").removeAttr("disabled");
+                    }
+                }
+            });
+        }
+    }
+
+    $('#username').keyup(username_check);
+    $('#useremail').keyup(useremail_check);
 		
 });

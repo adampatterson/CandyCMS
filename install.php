@@ -1,4 +1,4 @@
-<?php
+<?
 /**
 * @package CandyCMS
 * @version 0.7
@@ -184,11 +184,11 @@ $path = dirname(__FILE__);
 </head>
 <body>
 	<div id="container">
-		<?php if (isset($_GET['install'])) : ?>
+		<? if (isset($_GET['install'])) : ?>
 		
 		<h1>Candy Installer</h1>
 		
-		<?php 
+		<?
 			
 			$currentmodal = substr(sprintf('%o', fileperms('./core')), -4);
 			
@@ -212,7 +212,7 @@ $path = dirname(__FILE__);
 			$dbname = $_POST['dbname'];
 			$dbprefix = $_POST['dbprefix'];
 		
-			$config = "<?php\n\n";
+			$config = "<?\n\n";
 			$config .= "/**\n";
 			$config .= "* @package CandyCMS\n";
 			$config .= "* @version 0.1\n";
@@ -249,9 +249,7 @@ $path = dirname(__FILE__);
 			$fp = @fopen('core/config.php', 'w');
 			
 			if (!$fp) {
-			
 				diehard("Sorry, we couldn't write to core/config.php.");
-			
 			} else {
 			
 				fwrite($fp, $config);
@@ -271,12 +269,9 @@ $path = dirname(__FILE__);
 			
 			$currentmodal = substr(sprintf('%o', fileperms($path)), -4);
 			
-			if ($currentmodal != "0755" && $currentmodal != "0777") {
-			
+			if ($currentmodal != "0755" && $currentmodal != "0777")
 				$result = @chmod($path, 0755);
-				
-			}
-		
+
 			$fp = @fopen('./.htaccess', 'a');
 			
 			if (!$fp) {
@@ -294,12 +289,9 @@ $path = dirname(__FILE__);
 			#Include the file once we've created it!
 			$configfinal = @include('core/config.php');
 			
-			if (!$configfinal) {
-			
+			if (!$configfinal)
 				diehard("Sorry, we couldn't create core/config.php properly.");
-			
-			}
-			
+
 			try{ 
 				$dbh = new PDO(DB_DRIVER.':dbname='.DB_NAME.';host='.DB_HOST, DB_USERNAME, DB_PASSWORD);
 			} catch(Exception $e){
@@ -346,16 +338,14 @@ $path = dirname(__FILE__);
 			
 			#insert the user into the DB
 			$dbh->exec("INSERT INTO `".DB_PREFIX."users` (`username`, `password`, `name`, `email`, `role`) VALUES ('$username', '$password', '$name', '$email', 'admin')");
-		
-			
 		?>
 		
 		<p class="leadin">
 			Thanks for installing Candy!
 		</p>
-		<a href="index.php" class="button">Continue To <?php echo $_POST['title'] ?></a>
+		<a href="index.php" class="button">Continue To <? echo $_POST['title'] ?></a>
 		
-		<?php else : ?>
+		<? else : ?>
 		
 		<h1>Candy Installer</h1>
 		<p class="leadin">
@@ -365,7 +355,7 @@ $path = dirname(__FILE__);
 			<fieldset>
 				<h3>Site Information</h3>
 				<ul>
-					<li><label>Site URL</label><input type="text" name="url" value="http://<?php echo$_SERVER['HTTP_HOST'].trim($_SERVER['PHP_SELF'], 'install.php') ?>"/></li>
+					<li><label>Site URL</label><input type="text" name="url" value="http://<? echo$_SERVER['HTTP_HOST'].trim($_SERVER['PHP_SELF'], 'install.php') ?>"/></li>
 					<li><label>Site Title</label><input type="text" name="title" placeholder="Site TItle" /></li>
 				</ul>
 			</fieldset>
@@ -390,7 +380,7 @@ $path = dirname(__FILE__);
 			</fieldset>
 			<input type="submit" name="submit" value="Install Away!" class="button" />
 		</form>
-		<?php endif; ?>
+		<? endif; ?>
 		
 	</div>
 </body>

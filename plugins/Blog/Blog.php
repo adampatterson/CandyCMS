@@ -1,4 +1,4 @@
-<?php
+<?
 
 /**
  * @plugin Blog
@@ -22,25 +22,26 @@
 
  	}
 
- 	public static function listCategories($cat_id){
+ 	public static function listCategories($cat_id) {
  		
  		$cats = array();		
  		$cat_id = json_decode(stripslashes($cat_id));
  		
- 		foreach ($cat_id as $value) {
+ 		foreach ($cat_id as $value)
  			$cats[] = CandyDB::col("SELECT cat_name FROM ".DB_PREFIX."categories WHERE cat_id = :id", array('id' => $value));
- 		}
- 		
+
  		$html = '';
  		
- 		if (!empty($cats)) {
+ 		if (!empty($cats)):
  			$html .= '<ul class="category-list">';
- 			foreach ($cats as $value) {
+
+ 			foreach ($cats as $value):
  				$catlink = str_replace(' ', '-', strtolower($value));
  				$html .= '<li class="cat-'.strtolower($value).'"><a href="'.URL_PATH.self::getBlogPage().'/'.$catlink.'" title="'.$value.'">'.$value.'</a></li>';
- 			}	
+ 		    endforeach;
+
  			$html .= '</ul>';	
- 		}
+ 		endif;
  		
  		echo $html;
  	
@@ -62,8 +63,8 @@
  			$html .= '<td>'.$post->post_title.'</td>';
  			$html .= '<td>'.date('d/m/Y H:i:s', strtotime($post->post_date)).'</td>';
  			$html .= '<td>'.ucwords($post->status).'</td>';
- 			$html .= '<td><a href="dashboard.php?page=blog&edit='.$post->post_id.'" title="Edit Page">Edit</a></td>';
- 			$html .= '<td><a href="dashboard.php?page=blog&delete='.$post->post_id.'" title="'.$post->post_title.'" class="delete">[x]</a></td>';
+ 			$html .= '<td width="20"><a href="dashboard.php?page=blog&edit='.$post->post_id.'" title="Edit Page"><i class="fa fa-pencil-square-o"></i></a></td>';
+ 			$html .= '<td width="20"><a href="dashboard.php?page=blog&delete='.$post->post_id.'" title="'.$post->post_title.'" class="delete"><i class="fa fa-trash-o"></i></a></td>';
  			$html .= '</tr>';	
  		}
  		
@@ -85,7 +86,7 @@
  			$html .= '<td>'.$cat->cat_id.'</td>';
  			$html .= '<td>'.$cat->cat_name.'</td>';
  			$html .= '<td><!--Edit--></td>';
- 			$html .= '<td><a href="#'.$cat->cat_id.'" title="'.$cat->cat_name.'" class="delcat">[x]</a></td>';
+ 			$html .= '<td><a href="#'.$cat->cat_id.'" title="'.$cat->cat_name.'" class="delcat"><i class="fa fa-trash-o"></i></a></td>';
  			$html .= '</tr>';
  		}
  		
@@ -202,7 +203,7 @@
  		
  		$body = CandyDB::col("SELECT post_body FROM ". DB_PREFIX ."posts WHERE post_id = :id", compact('id'));
  		
- 		if (strlen($body) >= 200) {
+ 		if (strlen($body) >= $length) {
  			echo substr($body, 0, $length).'&hellip;';
  		} else {
  			echo $body;
@@ -282,7 +283,12 @@
  	}
  	
  	public static function disqusAccount(){
- 		return CandyDB::col("SELECT option_value FROM ". DB_PREFIX ."options WHERE option_key = :key", array('key' => 'disqus'));
+ 		$disqus = CandyDB::col("SELECT option_value FROM ". DB_PREFIX ."options WHERE option_key = :key", array('key' => 'disqus'));
+
+        if ( $disqus != '' )
+            return $disqus;
+        else
+            return false;
  	}
  	
  	public static function commentForm(){
@@ -347,7 +353,7 @@
  	
  		$site_url = Candy::Options('site_url');
 
- 		$count = CandyDB::col("SELECT COUNT(*) FROM `".DB_PREFIX."posts`");
+ 		$count = CandyDB::col("SELECT COUNT(*) FROM `".DB_PREFIX."posts` WHERE status = 'published' AND ");
 
  		$limit = CandyDB::col("SELECT option_value FROM ".DB_PREFIX."options WHERE option_key = :key", array('key' => 'perpage'));
 
@@ -389,35 +395,33 @@
 		
 		$site_url = Candy::Options('site_url');
 		
-		if (isset($_GET['category']) && is_numeric($_GET['category'])) {
+		if (isset($_GET['category']) && is_numeric($_GET['category'])):
 
 			$limit = CandyDB::col("SELECT option_value FROM ".DB_PREFIX."options WHERE option_key = :key", array('key' => 'perpage'));
 			
-			if (isset($_GET['page'])) {
+			if (isset($_GET['page'])):
 	 			$uri = explode('/', $_SERVER['REQUEST_URI']);
 	 			$uri = $uri[1];
-	 		} else {
+	 		else:
 	 			$uri = Candy::Options('homepage');
-	 		}
+	 		endif;
 			
-			if ($_GET['category'] == 2) {
-				if ($class !=false) {
+			if ($_GET['category'] == 2):
+				if ($class !=false)
 					echo "<a href='".$site_url.Blog::getBlogPage()."' class='$class'>$text</a>";
-				} else {
+				else
 					echo "<a href='".$site_url."'>$text</a>";
-				}
-			} else {
-				
+
+            else:
 				$page = $_GET['category']-1;
 				
-				if ($class !=false) {
+				if ($class !=false)
 					echo "<a href='".$site_url."$uri/$page' class='$class'>$text</a>";
-				} else {
+				else
 					echo "<a href='".$site_url."$uri/$page'>$text</a>";
-				}
-			}
-			
-		}
+			endif;
+
+        endif;
 	
 	}
 	
